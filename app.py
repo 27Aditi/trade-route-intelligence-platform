@@ -40,6 +40,7 @@ TRANSPORT_COLORS = {
 
 app = dash.Dash(__name__, suppress_callback_exceptions=True)
 app.title = "TradeRoute Intelligence Platform"
+server = app.server
 
 def parse_csv(contents):
     _, b64 = contents.split(",", 1)
