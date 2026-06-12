@@ -1,0 +1,31 @@
+from_country,from_iso3,to_country,to_iso3,product_category,trade_value_usd,transport_mode,transit_days,dependency_percent
+Russia,RUS,India,IND,Crude Oil,5200000000,Sea,28,78
+China,CHN,India,IND,Consumer Electronics,3100000000,Sea,18,72
+China,CHN,India,IND,Pharmaceutical APIs,1400000000,Sea,20,81
+Saudi Arabia,SAU,India,IND,Petroleum Products,2600000000,Sea,12,42
+Australia,AUS,India,IND,Coking Coal,1700000000,Sea,22,48
+Indonesia,IDN,India,IND,Palm Oil,900000000,Sea,14,60
+Japan,JPN,India,IND,Semiconductor Equipment,1300000000,Air,5,50
+Taiwan,TWN,India,IND,Microchips,2100000000,Air,4,68
+South Korea,KOR,India,IND,Steel Products,800000000,Sea,16,35
+Germany,DEU,India,IND,Industrial Machinery,1100000000,Sea,21,30
+Russia,RUS,India,IND,Defense Equipment,1800000000,Air,7,55
+UAE,ARE,India,IND,Gold,3400000000,Air,2,45
+India,IND,United States,USA,Software Services,4500000000,Air,3,35
+India,IND,United Arab Emirates,ARE,Textiles,1200000000,Sea,10,22
+India,IND,United Kingdom,GBR,IT Consulting,900000000,Air,2,28
+India,IND,Germany,DEU,Automobile Components,1100000000,Sea,16,31
+India,IND,Bangladesh,BGD,Cotton Yarn,650000000,Road,4,26
+India,IND,Nepal,NPL,Processed Food,280000000,Road,3,18
+India,IND,Singapore,SGP,Chemicals,720000000,Sea,9,24
+India,IND,South Africa,ZAF,Pharmaceuticals,540000000,Sea,18,20
+India,IND,Japan,JPN,Iron Ore,890000000,Sea,14,15
+India,IND,Australia,AUS,Refined Petroleum,1300000000,Sea,20,18
+China,CHN,United States,USA,Consumer Goods,18000000000,Sea,25,65
+Germany,DEU,United States,USA,Automobiles,8500000000,Sea,18,28
+Mexico,MEX,United States,USA,Auto Parts,6200000000,Road,3,55
+Canada,CAN,United States,USA,Energy Products,9100000000,Pipeline,5,72
+Japan,JPN,United States,USA,Electronics,5400000000,Sea,14,32
+Vietnam,VNM,United States,USA,Apparel,3200000000,Sea,22,48
+Brazil,BRA,China,CHN,Iron Ore,7800000000,Sea,35,58
+Australia,AUS,China,CHN,Natural Gas,6400000000,Sea,18,62
