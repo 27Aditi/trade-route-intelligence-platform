@@ -255,7 +255,6 @@ app.layout = html.Div([
 def build_map_figure(df, country_risk_df):
     fig = go.Figure()
 
-    # 1. Choropleth base
     fig.add_trace(go.Choropleth(
         locations=country_risk_df["iso3"],
         z=country_risk_df["country_risk_score"],
@@ -279,7 +278,6 @@ def build_map_figure(df, country_risk_df):
         showscale=True
     ))
 
-    # 2. Trade arcs per transport mode (separate traces for legend)
     max_val = df["trade_value_usd"].max()
     for mode, color in TRANSPORT_COLORS.items():
         subset = df[df["transport_mode"] == mode]
@@ -305,7 +303,6 @@ def build_map_figure(df, country_risk_df):
                 showlegend=False
             ))
 
-    # 3. Country node markers
     all_c = pd.concat([
         df[["from_country","from_iso3","from_country_risk"]].rename(
             columns={"from_country":"country","from_iso3":"iso3","from_country_risk":"risk_score"}),
@@ -367,8 +364,6 @@ def build_map_figure(df, country_risk_df):
     )
     return fig
 
-
-# ── CALLBACKS ─────────────────────────────────────────────────────────────────
 
 @app.callback(
     Output("store-df",       "data"),
@@ -501,7 +496,6 @@ def on_click(clickData, df_json):
         broken_color = RED if R["network_broken"] else GREEN
         broken_txt   = f"{R['isolated_count']} isolated" if R["network_broken"] else "Intact"
 
-        # ── SIDE PANEL MINI-SUMMARY ──────────────────────────────────────────
         side = [
             html.Div([
                 html.Span("Simulating: ", style={"color":MUTED,"fontSize":"11px"}),
@@ -518,7 +512,6 @@ def on_click(clickData, df_json):
             ], style={"display":"flex","justifyContent":"space-between","alignItems":"center"})
         ]
 
-        # ── KPI CARDS ROW ────────────────────────────────────────────────────
         kpis = html.Div([
             html.Div([
                 html.Span("⚡ DISRUPTION IMPACT — ", style={"color":AMBER,"fontWeight":"700","fontSize":"12px","letterSpacing":"0.12em"}),
@@ -542,7 +535,6 @@ def on_click(clickData, df_json):
                   "borderTop":f"3px solid {AMBER}","borderRadius":"14px",
                   "padding":"20px 24px","boxShadow":f"0 4px 32px {AMBER}08"})
 
-        # ── PRODUCT BREAKDOWN BAR CHART ──────────────────────────────────────
         pb = R["prod_breakdown"]
         bar_fig = go.Figure(go.Bar(
             x=pb.values, y=pb.index, orientation="h",
@@ -592,7 +584,7 @@ def on_click(clickData, df_json):
 
         detail = html.Div([
             html.Div([
-                # bar chart card
+
                 html.Div([
                     html.Div("TRADE EXPOSURE BY PRODUCT",
                              style={"fontSize":"9px","letterSpacing":"0.2em","color":PINK,
