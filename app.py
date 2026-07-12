@@ -25,7 +25,8 @@ MUTED = "#6b6d82"
 app = dash.Dash(
     __name__,
     suppress_callback_exceptions=True,
-    external_stylesheets=[dbc.themes.DARKLY, dbc.icons.BOOTSTRAP]
+    external_stylesheets=[dbc.themes.DARKLY, dbc.icons.BOOTSTRAP],
+    assets_folder=os.path.join(os.path.dirname(__file__), 'assets')
 )
 app.title = "TradeRoute Intelligence Platform"
 server = app.server
