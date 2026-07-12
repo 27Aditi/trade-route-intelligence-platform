@@ -1,192 +1,217 @@
-# TradeRoute Intelligence Platform — Global Supply Chain Risk & Disruption Simulator
+# TradeRoute Intelligence Platform
 
-> **Interactive global trade network mapping, country & route risk scoring, and one-click disruption simulation — all in a single live dashboard.**
+> Global supply chain risk analysis, disruption simulation, and alternative sourcing — powered by graph analytics and interactive visualizations.
 
-[![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=flat-square&logo=python)](https://www.python.org/)
-[![Dash](https://img.shields.io/badge/Dash-2.x-informational?style=flat-square&logo=plotly)](https://dash.plotly.com/)
-[![Plotly](https://img.shields.io/badge/Plotly-Graphing-purple?style=flat-square&logo=plotly)](https://plotly.com/python/)
-[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](#-license)
-
-**🔗 Live Demo:** [trade-route-intelligence-platform.onrender.com](https://trade-route-intelligence-platform.onrender.com/)
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=flat-square&logo=python)
+![Dash](https://img.shields.io/badge/Dash-2.0%2B-darkblue?style=flat-square&logo=plotly)
+![Plotly](https://img.shields.io/badge/Plotly-5.0%2B-3F4F75?style=flat-square&logo=plotly)
+![NetworkX](https://img.shields.io/badge/NetworkX-3.0%2B-orange?style=flat-square)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 ---
 
 ## Problem Statement
 
-Global supply chains are dense, interdependent networks — a single port closure, a border conflict, or a sanctioned country can cascade into losses far beyond the immediate trade lane. Yet most trade dashboards only show **historical numbers**: import/export volumes, tariffs, and country stats. They don't answer the question that actually matters to risk teams —
+Global supply chains are increasingly vulnerable to disruptions — geopolitical conflicts, natural disasters, port closures, and trade restrictions can cut off critical routes overnight. Most businesses have no real-time visibility into which trade routes are high-risk, which countries are single points of failure, and what alternative sourcing options exist.
 
-**"If this country or route disappeared tomorrow, what would break?"**
-
-**TradeRoute Intelligence Platform solves this** by turning a raw trade dataset into a live global network graph, scoring every route and country for geopolitical/logistics risk, and letting the user **click a country to simulate its failure** — instantly surfacing the trade value at risk, the routes cut, the products affected, and whether the remaining network fragments into isolated clusters.
+TradeRoute Intelligence Platform solves this by letting analysts upload trade data, visualize global routes on an interactive map, assess risk scores for every route and country, and simulate what happens when any node in the network is disrupted.
 
 ---
 
 ## Features
 
-| Module                     | Description                                                                                       |
-| --------------------------- | --------------------------------------------------------------------------------------------------- |
-| 🗺️ **Live Trade Map**        | Interactive world map plotting every trade route as a colour-coded arc by transport mode (Sea/Air/Road/Rail/Pipeline) |
-| 🌡️ **Country Risk Choropleth** | Every country shaded by an aggregated risk score (conflict, hazard, vulnerability, coping capacity) |
-| 📈 **Route Risk Scoring**    | Each trade lane classified LOW / MEDIUM / HIGH risk based on origin–destination risk inputs         |
-| 🖱️ **Node Profile on Hover** | Hover any country to see trade volume, inbound/outbound route counts, dependency %, transport modes and products |
-| ⚡ **Disruption Simulator**  | Click any country to simulate its sudden failure — cascading trade loss, routes cut, network fragmentation |
-| 🕸️ **Network Resilience**    | Detects single points of failure and isolated clusters once a node is removed from the network      |
-| 📊 **Impact KPIs**           | Auto-generated KPI cards: Trade at Risk, Routes Disrupted, Products Affected, Avg Dependency, Network Status |
-| 📁 **Bring Your Own Data**   | Drag-and-drop CSV upload — works with any trade dataset following the expected schema               |
+| Module | Description |
+|---|---|
+| Trade Map | Interactive globe with color-coded trade arcs by transport mode |
+| Risk Engine | Multi-factor risk scoring for every route and country |
+| Disruption Lab | Click any country to simulate its failure and see cascading impact |
+| Network Resilience | Graph-based resilience score with single point of failure detection |
+| Alternative Sourcing | Automatically suggests low-risk alternative suppliers on disruption |
+| CSV Upload | Upload any trade dataset or load the built-in sample data |
 
 ---
 
 ## Architecture
 
 ```
-trade-route-intelligence-platform/
+TradeRoute Intelligence Platform/
 │
-├── app.py                     # Main Dash application, layout, callbacks & map rendering
+├── app.py                  # Main Dash application and callbacks
 │
 ├── modules/
-│   ├── risk_engine.py          # Route & country risk scoring, SPOF detection, resilience scoring
-│   ├── graph_engine.py         # Trade network graph construction, critical node detection
-│   └── map_view.py             # Country → lat/lon coordinate lookup for geo-plotting
+│   ├── ingestion.py        # CSV parsing, validation, risk enrichment
+│   ├── risk_engine.py      # Route risk, country risk, resilience scoring
+│   ├── graph_engine.py     # NetworkX graph — centrality, disruption, alternatives
+│   └── map_view.py         # Plotly choropleth and trade arc visualizations
 │
-├── Data/                       # Reference / supporting datasets
-├── sample_trade.csv            # Example trade dataset to try the platform instantly
-└── requirements.txt
+├── assets/
+│   └── style.css           # Custom dark UI styling
+│
+├── Data/
+│   └── country_risk.csv    # INFORM risk scores by country
+│
+└── sample_trade.csv        # Built-in demo dataset
 ```
 
 ### Pipeline Flow
 
 ```
-Data Source              Processing                          Output
-────────────             ──────────                          ──────
-Uploaded Trade CSV   →   Risk Enrichment (risk_engine.py) →   Route & Country Risk Scores
-                     →   Graph Construction (graph_engine.py) → Critical Nodes / SPOFs
-                     →   Coordinate Mapping (map_view.py)  →   Global Route Map
-User clicks a node   →   Disruption Simulation             →   Cascade Impact + KPI Cards
-User hovers a node   →   Node Aggregation                  →   Trade Profile Panel
+Input                  Processing                    Output
+─────                  ──────────                    ──────
+CSV Upload       →     Column Validation       →     Validated DataFrame
+Trade Data       →     Risk Score Enrichment   →     Route Risk Scores
+Country Data     →     Weighted Risk Formula   →     Country Risk Map
+Trade Network    →     NetworkX Graph Build    →     Centrality Scores
+Country Click    →     Disruption Simulation   →     Impact Analysis
+Disrupted Route  →     Alternative Search      →     Sourcing Options
 ```
 
 ---
 
-## Core Engine Components
+## Risk Scoring Model
 
-### 1. Risk Engine (`risk_engine.py`)
-- Computes a **route risk score** for every trade lane from origin/destination inputs such as INFORM risk, conflict score, hazard score, vulnerability score, and coping capacity
-- Aggregates route-level scores into a **country risk score** used to shade the choropleth map
-- Identifies **single points of failure (SPOFs)** — countries whose removal disconnects parts of the network
-- Produces a **network resilience score** summarising how robust the overall trade graph is
+### Route Risk Score
+Each trade route is scored using a weighted formula:
 
-### 2. Graph Engine (`graph_engine.py`)
-- Builds a directed trade network graph from the uploaded dataset (`build_graph`)
-- Ranks **critical nodes** by connectivity and trade dependency (`get_critical_nodes`)
-- Feeds the disruption simulator's connectivity checks after a node is removed
+```
+Route Risk = (Origin Country Risk × 0.30)
+           + (Destination Country Risk × 0.30)
+           + (Transport Mode Risk × 0.20)
+           + (Dependency % / 10 × 0.20)
+```
 
-### 3. Disruption Simulator (`app.py`)
-- Removes a clicked country from the network and recomputes:
-  - **Total trade value at risk** (sum of all routes touching that country)
-  - **Routes cut** and **products affected**
-  - **Average dependency %** of the impacted lanes
-  - Whether the **remaining network fragments** into isolated country clusters
-- Surfaces results as live KPI cards, a product-exposure bar chart, and a ranked list of the top affected routes
+Transport mode risk values: Rail (4.0) > Road (3.5) > Sea (3.0) > Pipeline (2.5) > Air (2.0)
+
+### Country Risk Score
+Derived from INFORM Risk Index components:
+
+```
+Country Risk = (INFORM Risk × 0.35)
+             + (Conflict Score × 0.30)
+             + (Hazard Score × 0.20)
+             + (Vulnerability Score × 0.15)
+```
+
+### Network Resilience Score
+```
+Resilience = 10 - Avg Route Risk - (SPOF Count × 0.5) - (High Risk Routes × 0.3)
+```
+Capped between 0 (fragile) and 10 (robust).
 
 ---
 
-## Sample Data Schema
+## Graph Analytics
 
-The platform accepts any CSV following this shape (see `sample_trade.csv` for a working example):
+Built on **NetworkX DiGraph** where:
+- **Nodes** = countries with risk score attributes
+- **Edges** = trade routes with value, transport mode, transit days, dependency
 
-| Column                | Description                                   |
-| ---------------------- | ---------------------------------------------- |
-| `from_country` / `to_country` | Trade route origin and destination        |
-| `from_iso3` / `to_iso3`       | ISO-3 country codes (used for map plotting) |
-| `product_category`     | Product/commodity being traded                |
-| `trade_value_usd`      | Trade value in USD                             |
-| `transport_mode`       | Sea / Air / Road / Rail / Pipeline             |
-| `transit_days`         | Transit time in days                           |
-| `dependency_percent`   | % dependency of the destination on this route  |
+Key metrics computed:
+- **Betweenness Centrality** — identifies transit hubs critical to network flow
+- **Degree Centrality** — measures connection density per country
+- **Criticality Score** = Betweenness (0.6) + Degree (0.4)
+- **Single Points of Failure** — countries with avg dependency > 60%
 
-> If risk-related columns (`inform_risk`, `conflict_score`, `hazard_score`, `vulnerability_score`, `coping_capacity_score`) are missing, the platform automatically generates seeded placeholder scores so the dashboard remains fully functional on any trade dataset.
+---
+
+## Disruption Simulation
+
+When a country node is removed from the graph:
+1. All connected trade routes are identified
+2. Total trade value at risk is calculated
+3. Affected product categories are listed
+4. Network connectivity is re-evaluated — isolated nodes detected
+5. Top 8 highest-value affected routes are displayed
+6. Alternative low-risk suppliers are suggested for the top product category
 
 ---
 
 ## Getting Started
 
 ### Prerequisites
+
 - Python 3.8 or above
+- Internet connection (for Google Fonts in UI)
 
 ### Installation
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/27Aditi/trade-route-intelligence-platform.git
+# Clone the repository
 cd trade-route-intelligence-platform
 
-# 2. (Recommended) Create a virtual environment
+# Create a virtual environment (recommended)
 python -m venv venv
 venv\Scripts\activate        # Windows
 source venv/bin/activate     # Mac/Linux
 
-# 3. Install dependencies
+# Install dependencies
 pip install -r requirements.txt
 
-# 4. Run the app
+# Run the app
 python app.py
 ```
 
-App will open at `http://localhost:8050`
+The app will open at `http://localhost:8050`
 
-> Upload `sample_trade.csv` to instantly explore the map, risk scores, and disruption simulator without needing your own dataset.
+> Note: Upload your own trade CSV or click **Load Sample Dataset** to explore with built-in data.
+
+---
+
+## Input Data Format
+
+The platform accepts CSV files with the following required columns:
+
+| Column | Description |
+|---|---|
+| from_country | Exporting country name |
+| from_iso3 | ISO3 country code of exporter |
+| to_country | Importing country name |
+| to_iso3 | ISO3 country code of importer |
+| product_category | Type of goods traded |
+| trade_value_usd | Trade value in USD |
+| transport_mode | Sea / Air / Road / Rail / Pipeline |
+| transit_days | Number of days in transit |
+| dependency_percent | % dependency on this route |
 
 ---
 
 ## Tech Stack
 
-| Layer            | Technology                          |
-| ------------------ | -------------------------------------- |
-| Dashboard          | Dash (Plotly)                         |
-| Visualization      | Plotly — Choropleth, Scattergeo, Bar  |
-| Data Processing    | Pandas, NumPy                         |
-| Backend Server     | Flask (via Dash's `app.server`)        |
-| Deployment         | Render                                |
-| Language           | Python                                 |
+| Layer | Technology |
+|---|---|
+| Web Framework | Plotly Dash |
+| Graph Analytics | NetworkX |
+| Visualizations | Plotly (Choropleth, Scattergeo, Bar) |
+| Risk Data | INFORM Risk Index |
+| UI Styling | Custom CSS — dark theme |
+| Data Processing | Pandas, NumPy |
+| Deployment | Render (Gunicorn) |
 
 ---
 
 ## Key Design Decisions
 
-**Why Dash over Streamlit?** The dashboard is built around click and hover interactions on a live map (inspect a node, then click it to simulate disruption). Dash's callback model maps cleanly onto Plotly's native `hoverData` / `clickData` events, which makes this kind of stateful, event-driven interactivity far more natural than a script-rerun framework.
+**Why Dash over Streamlit?**
+TradeRoute requires complex bidirectional interactivity — clicking a country on the map triggers a disruption simulation, which updates multiple panels simultaneously. Dash's callback architecture handles this reactive pattern natively, whereas Streamlit reruns the entire script on each interaction.
 
-**Why simulate disruption by node removal instead of a static risk score?** A high risk score alone doesn't tell you the blast radius of a failure. Removing a country from the graph and recomputing connectivity shows the *actual* cascading consequence — cut routes, stranded trade value, and whether the rest of the network stays connected.
+**Why NetworkX for supply chain modeling?**
+Supply chains are fundamentally graphs — countries are nodes, trade routes are directed edges. NetworkX provides betweenness centrality, connectivity checks, and node removal in a few lines, making disruption simulation mathematically rigorous rather than just filtering a dataframe.
 
-**Why auto-generate placeholder risk scores?** Real geopolitical risk indicators aren't always available in a user's trade dataset. Rather than blocking analysis, the platform seeds plausible risk values so anyone can upload their own trade CSV and get a fully working risk-and-disruption view immediately.
-
----
-
-## Sample Output
-
-- A world map of every trade lane, colour-coded by transport mode, over a risk-shaded country choropleth
-- A hoverable trade profile for any country — volume, routes, dependency, products
-- A one-click disruption simulation showing trade at risk, routes cut, and whether the network fractures
-- A ranked breakdown of the products and routes most exposed to a given country's failure
+**Why weighted risk formula over ML?**
+The INFORM Risk Index already provides validated, peer-reviewed risk scores for every country. Combining these with transport mode and dependency weights gives a transparent, explainable risk score — critical in supply chain contexts where analysts need to justify risk decisions to stakeholders.
 
 ---
 
 ## Future Improvements
 
-- [ ] Live ingestion of real-world risk indicators (e.g., INFORM Risk Index, ACLED conflict data)
-- [ ] Multi-node / simultaneous disruption scenarios
-- [ ] Exportable PDF disruption reports
-- [ ] Historical trend playback of trade flows over time
-- [ ] Tariff- and currency-shock simulation alongside physical disruption
-- [ ] Multi-user sessions with saved datasets
+- Real-time trade data integration via UN Comtrade API
+- Time-series risk trend visualization per country
+- Multi-country simultaneous disruption simulation
+- Port-level granularity with shipping lane data
+- Export disruption reports as PDF
 
 ---
 
-## Author
-
-Built as a supply chain risk intelligence project demonstrating real-world application of network graph analysis, geospatial visualization, and interactive disruption simulation on global trade data.
-
----
-
-## 📄 License
+## License
 
 MIT License — free to use, modify, and distribute.
