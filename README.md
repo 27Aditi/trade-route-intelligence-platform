@@ -1,4 +1,4 @@
-# 🌐 TradeRoute Intelligence Platform — Global Supply Chain Risk & Disruption Simulator
+# TradeRoute Intelligence Platform — Global Supply Chain Risk & Disruption Simulator
 
 > **Interactive global trade network mapping, country & route risk scoring, and one-click disruption simulation — all in a single live dashboard.**
 
@@ -11,7 +11,7 @@
 
 ---
 
-## 📌 Problem Statement
+## Problem Statement
 
 Global supply chains are dense, interdependent networks — a single port closure, a border conflict, or a sanctioned country can cascade into losses far beyond the immediate trade lane. Yet most trade dashboards only show **historical numbers**: import/export volumes, tariffs, and country stats. They don't answer the question that actually matters to risk teams —
 
@@ -21,7 +21,7 @@ Global supply chains are dense, interdependent networks — a single port closur
 
 ---
 
-## ✨ Features
+## Features
 
 | Module                     | Description                                                                                       |
 | --------------------------- | --------------------------------------------------------------------------------------------------- |
@@ -36,7 +36,7 @@ Global supply chains are dense, interdependent networks — a single port closur
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 trade-route-intelligence-platform/
@@ -67,7 +67,7 @@ User hovers a node   →   Node Aggregation                  →   Trade Profile
 
 ---
 
-## 🧠 Core Engine Components
+## Core Engine Components
 
 ### 1. Risk Engine (`risk_engine.py`)
 - Computes a **route risk score** for every trade lane from origin/destination inputs such as INFORM risk, conflict score, hazard score, vulnerability score, and coping capacity
@@ -90,7 +90,7 @@ User hovers a node   →   Node Aggregation                  →   Trade Profile
 
 ---
 
-## 📁 Sample Data Schema
+## Sample Data Schema
 
 The platform accepts any CSV following this shape (see `sample_trade.csv` for a working example):
 
@@ -104,11 +104,11 @@ The platform accepts any CSV following this shape (see `sample_trade.csv` for a 
 | `transit_days`         | Transit time in days                           |
 | `dependency_percent`   | % dependency of the destination on this route  |
 
-> ⚠️ If risk-related columns (`inform_risk`, `conflict_score`, `hazard_score`, `vulnerability_score`, `coping_capacity_score`) are missing, the platform automatically generates seeded placeholder scores so the dashboard remains fully functional on any trade dataset.
+> If risk-related columns (`inform_risk`, `conflict_score`, `hazard_score`, `vulnerability_score`, `coping_capacity_score`) are missing, the platform automatically generates seeded placeholder scores so the dashboard remains fully functional on any trade dataset.
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Python 3.8 or above
@@ -138,7 +138,7 @@ App will open at `http://localhost:8050`
 
 ---
 
-## 📦 Tech Stack
+## Tech Stack
 
 | Layer            | Technology                          |
 | ------------------ | -------------------------------------- |
@@ -151,7 +151,7 @@ App will open at `http://localhost:8050`
 
 ---
 
-## 🎯 Key Design Decisions
+## Key Design Decisions
 
 **Why Dash over Streamlit?** The dashboard is built around click and hover interactions on a live map (inspect a node, then click it to simulate disruption). Dash's callback model maps cleanly onto Plotly's native `hoverData` / `clickData` events, which makes this kind of stateful, event-driven interactivity far more natural than a script-rerun framework.
 
@@ -161,7 +161,7 @@ App will open at `http://localhost:8050`
 
 ---
 
-## 📈 Sample Output
+## Sample Output
 
 - A world map of every trade lane, colour-coded by transport mode, over a risk-shaded country choropleth
 - A hoverable trade profile for any country — volume, routes, dependency, products
@@ -170,7 +170,7 @@ App will open at `http://localhost:8050`
 
 ---
 
-## 🔮 Future Improvements
+## Future Improvements
 
 - [ ] Live ingestion of real-world risk indicators (e.g., INFORM Risk Index, ACLED conflict data)
 - [ ] Multi-node / simultaneous disruption scenarios
@@ -181,7 +181,7 @@ App will open at `http://localhost:8050`
 
 ---
 
-## 👨‍💻 Author
+## Author
 
 Built as a supply chain risk intelligence project demonstrating real-world application of network graph analysis, geospatial visualization, and interactive disruption simulation on global trade data.
 
